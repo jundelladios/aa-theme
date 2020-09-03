@@ -19,7 +19,8 @@ add_action( 'carbon_fields_register_fields', 'aa_blocks_lists' );
 function aa_blocks_lists() {
 
     aa_blocks_loader( array(
-        'sample'
+        'submenu',
+        'slider'
     ) );
     
 }

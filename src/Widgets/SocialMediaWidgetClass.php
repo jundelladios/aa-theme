@@ -8,7 +8,7 @@
  * @package AA_Project
  */
 
-namespace App\Widgets;
+namespace Wordpress\Widgets;
 
 class SocialMediaWidgetClass extends \WP_Widget {
 

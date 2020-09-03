@@ -127,7 +127,7 @@ add_action( 'widgets_init', 'aa_footer_widget' );
 
 add_action( 'widgets_init', 'aa_register_widgets' ); 
 function aa_register_widgets() {
-    register_widget( new App\Widgets\SocialMediaWidgetClass );
+    register_widget( new Wordpress\Widgets\SocialMediaWidgetClass );
 }
 
 /**
@@ -137,7 +137,7 @@ function aa_register_widgets() {
  */
 function aa_header_top_menu() {
 	ob_start();
-	$walker = new App\Menu\MenuWithDescriptionClass;
+	$walker = new Wordpress\Menu\MenuWithDescriptionClass;
 	?>
 	<nav class="nav-menu">
 		<?php 
@@ -202,23 +202,13 @@ function aa_header_tagline() {
 }
 
 /**
- * Menu Content Post Type
+ * Submenu Shortcode
  */
-function aa_menu_content_post() {
- 
-    register_post_type( 'menu-content',
-    // CPT Options
-        array(
-            'labels' => array(
-				'name' => __( 'Theme Submenus' )
-			),
-			'description' => 'Lorem ipsum dolor etc.',
-            'public' => true,
-            'has_archive' => true,
-            'rewrite' => array('slug' => 'menu-content'),
-			'show_in_rest' => true,
-			'menu_icon' => 'dashicons-menu'
-        )
-    );
+function aa_submenu_shortcode( $attributes ) {
+	$attrs = shortcode_atts( array(
+		'menuid' => null
+	), $attributes );
+	
+	return apply_filters('the_content', get_post_field('post_content', $attrs['menuid']));
 }
-add_action( 'init', 'aa_menu_content_post' );
+add_shortcode( 'american-accents-submenu', 'aa_submenu_shortcode' );

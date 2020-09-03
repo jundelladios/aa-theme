@@ -19,7 +19,6 @@ $aaproject = array(
 /**
  * Google Fonts
  */
-
 $aa_google_fonts = array(
     'Roboto' => 'Roboto',
     'Montserrat' => 'Montserrat',

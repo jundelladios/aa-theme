@@ -25,14 +25,27 @@
             <?php echo aa_site_logo(); ?>
             <?php echo aa_header_tagline(); ?>
         </div>
-        <div id="nav">
-            <div class="container">
-                <div class="d-flex align-items-center">
-                    <?php echo aa_header_top_menu(); ?>
-                    <div class="search-form">
-                        <form action="/">
-                            <input type="text" name="search" placeholder="Search" />
-                        </form>
+        <div class="header-nav-wrap">
+            <div id="nav">
+                <div class="container header-container position-relative">
+                    <div class="d-flex align-items-center">
+                            <div class="mobile-menu-wrap">
+                                <span class="mobile-menu" id="mobile_toggle_js">
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                </span>
+                            </div>
+                            <?php echo aa_header_top_menu(); ?>
+                        <div class="search-form">
+                            <form action="/">
+                                <div class="fgroup">
+                                    <input type="text" class="search-input" name="search" placeholder="Search" style="width: 100%;" />
+                                    <button type="submit" class="search-btn"><span class="icon-search"></span></button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
