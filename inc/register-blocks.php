@@ -20,7 +20,15 @@ function aa_blocks_lists() {
 
     aa_blocks_loader( array(
         'submenu',
-        'slider'
+        'slider',
+        'submenuv2',
+        'blurb',
+        'backtotop',
+        'products',
+        'accordion',
+        'content',
+        'accordion-secondary',
+        'columns'
     ) );
     
 }

@@ -61,11 +61,11 @@ function aa_menu_content_post() {
     // CPT Options
         array(
             'labels' => array(
-				'name' => __( 'Submenu Creator' )
+				'name' => __( 'Shortcode Content' )
 			),
             'public' => true,
             'has_archive' => true,
-            'rewrite' => array('slug' => 'menu-content'),
+            'rewrite' => array('slug' => 'sc-content'),
 			'show_in_rest' => true,
             'menu_icon' => 'dashicons-menu',
             'exclude_from_search' => true

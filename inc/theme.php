@@ -117,6 +117,25 @@ function aa_footer_widget() {
         'before_title' => '<h4 class="aa-widget-title h-line">',
         'after_title' => '</h4>',
 	) );
+
+
+	register_sidebar( array(
+        'name' => 'Printable Header',
+        'id' => 'aa_printable_header',
+        'before_widget' => '<div class="aa-widget-wrap d-flex align-items-center justify-content-center">',
+        'after_widget' => '</div>',
+        'before_title' => '<h4 class="aa-widget-title h-line">',
+        'after_title' => '</h4>',
+	) );
+
+	register_sidebar( array(
+        'name' => 'Printable Footer',
+        'id' => 'aa_printable_footer',
+        'before_widget' => '<div class="aa-widget-wrap d-flex align-items-center justify-content-center">',
+        'after_widget' => '</div>',
+        'before_title' => '<h4 class="aa-widget-title h-line">',
+        'after_title' => '</h4>',
+	) );
 }
 add_action( 'widgets_init', 'aa_footer_widget' );
 
@@ -204,11 +223,26 @@ function aa_header_tagline() {
 /**
  * Submenu Shortcode
  */
-function aa_submenu_shortcode( $attributes ) {
+function aa_ac_shortcode( $attributes ) {
 	$attrs = shortcode_atts( array(
-		'menuid' => null
+		'id' => null
 	), $attributes );
 	
-	return apply_filters('the_content', get_post_field('post_content', $attrs['menuid']));
+	return apply_filters('the_content', get_post_field('post_content', $attrs['id']));
 }
-add_shortcode( 'american-accents-submenu', 'aa_submenu_shortcode' );
+add_shortcode( 'sc-content', 'aa_ac_shortcode' );
+
+// get image alt
+function aa_image_alt( $img ) {
+
+	if( !$img ) return null;
+
+	return get_post_meta( $img, '_wp_attachment_image_alt', true );
+
+}
+
+// handler
+function __e( $value ) {
+	if( isset( $value ) ) return $value;
+	else return null;
+}

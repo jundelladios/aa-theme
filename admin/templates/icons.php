@@ -61,7 +61,14 @@
         ?>
 
         <div class="notice notice-success is-dismissible">
-            <p><strong>Icon's found!</strong> To add new icon <a href="<?php echo get_template_directory_uri() . '/assets/iconmoon/selection.json'  ?>" target="_blank" download>download</a> the json file and import to <a href="https://icomoon.io/" target="_blank">Iconmoon</a>.</p>
+            <p>Instructions:</p>
+            <p>1. Please click and copy the icon from alert prompt.</p>
+            <p>2. embed this <code><?php echo htmlspecialchars("<span class=\"icon your-copied-icon\"></span>"); ?></code></p>
+            <p>3. you can choose any html element like <code>i</code> or <code>span</code></p>
+        </div>
+
+        <div class="notice notice-error">
+            <p><strong>Developer Mode:</strong> To add new icon <a href="<?php echo get_template_directory_uri() . '/assets/iconmoon/selection.json'  ?>" target="_blank" download>download</a> the json file and import to <a href="https://icomoon.io/" target="_blank">Iconmoon</a>.</p>
         </div>
 
         <?php

@@ -21,14 +21,19 @@ function aa_load_assets() {
     wp_enqueue_style( 'bootstrap-theme-css', get_template_directory_uri() . '/assets/bootstrap/css/bootstrap.min.css', array(), $aaproject['version'], null );
     wp_enqueue_style( 'theme-main', get_template_directory_uri() . '/assets/css/style.css', array(), $aaproject['version'], null );
     wp_enqueue_style( 'theme-css', get_template_directory_uri() . '/style.css', array(), $aaproject['version'], null );
-    wp_enqueue_style( 'google-fonts', 'https://fonts.googleapis.com/css2?family=' . get_theme_mod( 'font_customizer_font_style', reset( $aa_google_fonts ) ) . ':ital,wght@0,400;0,700;0,900;1,400;1,700;1,900', array(), null, null );
+    wp_enqueue_style( 'google-fonts', 'https://fonts.googleapis.com/css2?family=' . get_theme_mod( 'font_customizer_font_style', reset( $aa_google_fonts ) ) . ':ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&display=swap', array(), null, null );
     wp_enqueue_style( 'theme-icons', get_template_directory_uri() . '/assets/iconmoon/style.css', array(), $aaproject['version'], null );
-    wp_add_inline_style( 'theme-main', aa_inline_styles() );
+    wp_enqueue_style( 'slick-slider', get_template_directory_uri() . '/assets/libs/slick.min.css', array(), $aaproject['version'], null );
+
+    // remove media element wp
+    wp_deregister_script('wp-mediaelement');
+    wp_deregister_style('wp-mediaelement');
 
     // Enqueue Scripts
     wp_enqueue_script('jquery');
-    wp_enqueue_script( 'boostrap-theme-js', get_template_directory_uri() . '/assets/bootstrap/js/bootstrap.min.js', array('jquery'), $aaproject['version'], true );
+    wp_enqueue_script( 'boostrap-theme-js', get_template_directory_uri() . '/assets/bootstrap/js/bootstrap.bundle.min.js', array('jquery'), $aaproject['version'], true );
     wp_enqueue_script( 'theme-js', get_template_directory_uri() . '/assets/js/script.js', array('jquery'), $aaproject['version'], true );
+    wp_enqueue_script( 'slick-slider', get_template_directory_uri() . '/assets/libs/slick.min.js', array('jquery'), $aaproject['version'], true );
 }
 add_action( 'wp_enqueue_scripts', 'aa_load_assets' );
 

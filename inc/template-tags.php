@@ -7,6 +7,148 @@
  * @package AA_Project
  */
 
+// adding custom attribute for wp images
+add_filter( 'wp_get_attachment_image_attributes', 'aa_change_attachment_image_markup' );
+function aa_change_attachment_image_markup($attributes) {
+	if( $attributes['src'] ) {
+		$image = \Api\Media::getImageByURL($attributes['src']);
+		$proxy = $attributes['src'];
+		if( function_exists( 'aa_image_proxy' ) && $image ) {
+			$proxy = aa_image_proxy($image['src']);
+
+			if( !isset( $attributes['data-srcset'] ) && $proxy ) {
+				$attributes['data-srcset'] = $proxy;
+			}
+
+			if( !isset( $attributes['data-src'] ) ) {
+				$attributes['data-src'] = $image['finalsrc'];
+			}
+
+			if( !isset( $attributes['data-sizes'] ) ) {
+				$attributes['data-sizes'] = 'auto';
+			}
+
+			if( !isset( $attributes['data-aspectratio'] ) ) {
+				$attributes['data-aspectratio'] = $image['width'].'/'.$image['height'];
+			}
+			
+			if( !isset( $attributes['width'] ) ) {
+				$attributes['width'] = $image['width'];
+			}
+			
+			if( !isset( $attributes['height'] ) ) {
+				$attributes['height'] = $image['height'];
+			}
+
+			$attributes['src'] = $image['finalsrc'];
+
+		}
+		
+	}
+
+	$attributes['class'] .= ' lazyload lz-blur';
+
+	return $attributes;
+}
+
+// wp images with srcset
+add_filter('the_content','aa_wp_make_response_image_srcsets');
+function aa_wp_make_response_image_srcsets($the_content) {
+	if(!$the_content) { return; }
+	libxml_use_internal_errors(true);
+	$post = new DOMDocument();
+    $post->loadHTML(
+		mb_convert_encoding(
+			$the_content, 
+			'HTML-ENTITIES', 
+			defined(DB_CHARSET) ? DB_CHARSET : 'UTF-8'
+		)
+	);
+    $imgs = $post->getElementsByTagName('img');
+	foreach( $imgs as $img ) {
+		$src = $img->getAttribute('src');
+		$img->setAttribute('class', $img->getAttribute('class') . ' lazyload lz-blur');
+		$image = \Api\Media::getImageByURL($src);
+		if( function_exists( 'aa_image_proxy' ) && $image ) {
+			$proxy = aa_image_proxy($image['src']);
+			if( !$img->hasAttribute('data-srcset') ) {
+				$img->setAttribute('data-srcset', $proxy);
+			}
+			if( !$img->hasAttribute('data-src') ) {
+				$img->setAttribute('data-src', $image['finalsrc']);
+			}
+			if( !$img->hasAttribute('data-sizes') ) {
+				$img->setAttribute('data-sizes', 'auto');
+			}
+			if( !$img->hasAttribute('data-aspectratio') ) {
+				$img->setAttribute('data-aspectratio', $image['width'].'/'.$image['height']);
+			}
+			if( !$img->hasAttribute('width') ) {
+				$img->setAttribute('width', $image['width']);
+			}
+			if( !$img->hasAttribute('height') ) {
+				$img->setAttribute('height', $image['height']);
+			}
+			$img->setAttribute('src', $image['finalsrc']);
+		}
+	}
+	return $post->saveHTML();
+}
+
+
+add_filter('media_send_to_editor', 'aa_inserted_image_div', 10, 3 );
+
+function aa_inserted_image_div( $html, $send_id, $attachment )
+{
+	return str_replace('<img', '<img data-editor="true" ', $html);
+}
+
+function aa_site_logo_v2() {
+
+	$custom_logo_id = get_theme_mod( 'custom_logo' );
+
+	$logo = wp_get_attachment_image_src( $custom_logo_id , 'full' );
+
+	ob_start();
+
+	?>
+
+	<div class="site-logo faux-heading">
+
+		<a href="<?php echo home_url(); ?>" class="custom-logo-link" rel="home">
+
+		<?php 
+		
+		if ( has_custom_logo() ) {
+			?>
+
+			<?php aa_lazyimg([
+				'src' => $logo[0],
+				'alt' => get_bloginfo('name')
+			]); ?>
+
+			<?php
+
+		} else {
+
+			echo '<h1>' . get_bloginfo('name') . '</h1>';
+
+		}
+		
+		?>
+
+		</a>
+
+	</div>
+
+	<?php
+
+	$html = ob_get_clean();
+
+	return $html;
+
+}
+
 function aa_site_logo( $args = array(), $echo = true ) {
     global $aaproject;
 	$logo       = get_custom_logo();

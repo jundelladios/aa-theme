@@ -31,3 +31,8 @@ require get_template_directory() . '/inc/assets.php';
  * admin settings of the theme
  */
 require get_template_directory() . '/admin/admin.php';
+
+/**
+ * php scss
+ */
+require get_template_directory() . '/inc/scss.inc.php';

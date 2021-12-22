@@ -11,16 +11,18 @@ global $aaproject;
 use Carbon_Fields\Field;
 use Carbon_Fields\Block;
 
-$notice = 'You have to publish this post first, then refresh the page.';
-if( isset( $_GET['post'] ) ) {
-    $notice = 'Use this shortcode for menu description - [american-accents-submenu menuid="' . $_GET['post']  . '"]';
-}
+// $notice = 'You have to publish this post first, then refresh the page.';
+// if( isset( $_GET['post'] ) ) {
+//     if(!is_array($_GET['post'])) {
+//         $notice = 'Use this shortcode for menu description - [american-accents-submenu menuid="' . $_GET['post']  . '"]';
+//     }
+// }
 
 Block::make( __( 'Sub Menus' ) )
-->set_category( 'aa_submenu', __( 'American Accents Submenus', $aaproject['context'] ), 'dashicons-menu' )
+->set_category( 'aa_blocks', __( 'American Accents', $aaproject['context'] ), 'dashicons-menu' )
 ->set_inner_blocks( false )
 ->add_fields( array(
-    Field::make( 'complex', 'column', $notice )
+    Field::make( 'complex', 'column', '' )
     ->set_layout( 'tabbed-horizontal' )
     ->set_collapsed( true )
     ->set_max(4)
@@ -29,7 +31,8 @@ Block::make( __( 'Sub Menus' ) )
         ->set_collapsed( true )
         ->add_fields( array(
             Field::make( 'text', 'ptitle', 'Menu Group Title' )->set_width( 50 ),
-            Field::make( 'text', 'psubtext', 'Menu Grou Subtitle' )->set_width( 50 ),
+            Field::make( 'text', 'psubtext', 'Menu Group Subtitle' )->set_width( 50 ),
+            Field::make( 'text', 'plink', 'Menu Group Link' ),
             Field::make( 'complex', 'gitems', __( 'Menu Group Items', $aaproject['context'] ) )
             ->set_collapsed( true )
             ->add_fields( array(
@@ -49,7 +52,6 @@ Block::make( __( 'Sub Menus' ) )
     ))
     ->set_header_template( 'Menu Column <%- $_index+1 %>' )
 ) )
-->set_preview_mode( false )
 ->set_render_callback( function( $fields, $attributes, $inner_blocks ) {
     if( $fields['column'] ):
     ?>
@@ -57,7 +59,7 @@ Block::make( __( 'Sub Menus' ) )
         <div class="row">
             <?php $grids = 12/count( $fields['column'] ); ?>
             <?php foreach( $fields['column'] as $column ): ?>
-                <div class="col-md-<?php echo $grids; ?>">
+                <div class="col-lg-<?php echo $grids; ?>">
                     <div id="<?php echo $column['_id']; ?>" class="menu-col-item-wrap">
                         <?php if( $column['submenus'] ): ?>
                             <?php foreach( $column['submenus'] as $submenus ): ?>
@@ -65,11 +67,21 @@ Block::make( __( 'Sub Menus' ) )
                                 <div id="<?php echo $submenus['_id']; ?>" class="submenus-wrap">
                                 
                                     <?php if( $submenus['ptitle'] ): ?>
+                                        <?php if( isset( $submenus['plink'] ) && $submenus['plink'] ): ?>
+                                            <a href="<?php echo $submenus['plink']; ?>" class="category-link ptitle d-block">
+                                                <strong><?php echo $submenus['ptitle']; ?>
+                                                    <?php if( $submenus['psubtext'] ): ?>
+                                                        <span class="psubtext"><?php echo $submenus['psubtext']; ?></span>
+                                                    <?php endif; ?>
+                                                </strong>
+                                            </a>
+                                        <?php else: ?>
                                             <strong class="ptitle d-block"><?php echo $submenus['ptitle']; ?>
                                                 <?php if( $submenus['psubtext'] ): ?>
                                                     <span class="psubtext"><?php echo $submenus['psubtext']; ?></span>
                                                 <?php endif; ?>
                                             </strong>
+                                        <?php endif; ?>
                                     <?php endif; ?>
 
                                     <div class="grouped-menu-items-wrap" id="gitemwrap">
