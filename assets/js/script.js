@@ -99,19 +99,25 @@
                 if( $elem.hasClass('show') ) {
                     $elem.removeClass('show');
                     this.setHashLink(null);
+                    $elem.trigger('aa_accordion_hide');
                 } else {
                     $elem.addClass('show');
                     this.setHashLink($elem.data('id'));
+                    $elem.trigger('aa_accordion_show');
                 }
-                this.content($elem.data('accordion'));
+                this.content($elem.data('accordion'), $elem);
             },
-            content: function(accordion) {
+            content: function(accordion, $elem) {
                 var content = $(`[data-accordion-content="${accordion}"]`);
                 if( content.hasClass('show') ) {
-                    content.slideUp();
+                    content.slideUp(400, function() {
+                        $elem.trigger('aa_accordion_hide_done');
+                    });
                     content.removeClass('show');
                 } else {
-                    content.slideDown();
+                    content.slideDown(400, function() {
+                        $elem.trigger('aa_accordion_show_done');
+                    });
                     content.addClass('show');
                 }
             },

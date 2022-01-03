@@ -11,36 +11,30 @@
 add_filter( 'wp_get_attachment_image_attributes', 'aa_change_attachment_image_markup' );
 function aa_change_attachment_image_markup($attributes) {
 	if( $attributes['src'] ) {
-		$image = \Api\Media::getImageByURL($attributes['src']);
-		$proxy = $attributes['src'];
-		if( function_exists( 'aa_image_proxy' ) && $image ) {
-			$proxy = aa_image_proxy($image['src']);
 
-			if( !isset( $attributes['data-srcset'] ) && $proxy ) {
-				$attributes['data-srcset'] = $proxy;
-			}
+		if( defined( '_APP_IMG_CDN' ) ) {
 
-			if( !isset( $attributes['data-src'] ) ) {
-				$attributes['data-src'] = $image['finalsrc'];
+			$srcset = \Api\Media::imageproxy($attributes['src']);
+
+    		$imgurl = \Api\Media::imageURLCDN($attributes['src']);
+
+			if( !isset( $attributes['data-srcset'] ) ) {
+				$attributes['data-srcset'] = $srcset;
 			}
 
 			if( !isset( $attributes['data-sizes'] ) ) {
 				$attributes['data-sizes'] = 'auto';
 			}
-
-			if( !isset( $attributes['data-aspectratio'] ) ) {
-				$attributes['data-aspectratio'] = $image['width'].'/'.$image['height'];
-			}
 			
 			if( !isset( $attributes['width'] ) ) {
-				$attributes['width'] = $image['width'];
+				$attributes['width'] = 'auto';
 			}
 			
 			if( !isset( $attributes['height'] ) ) {
-				$attributes['height'] = $image['height'];
+				$attributes['height'] = 'auto';
 			}
 
-			$attributes['src'] = $image['finalsrc'];
+			$attributes['src'] = $imgurl;
 
 		}
 		
@@ -68,28 +62,26 @@ function aa_wp_make_response_image_srcsets($the_content) {
 	foreach( $imgs as $img ) {
 		$src = $img->getAttribute('src');
 		$img->setAttribute('class', $img->getAttribute('class') . ' lazyload lz-blur');
-		$image = \Api\Media::getImageByURL($src);
-		if( function_exists( 'aa_image_proxy' ) && $image ) {
-			$proxy = aa_image_proxy($image['src']);
+
+		if( defined( '_APP_IMG_CDN' ) && $src ) {
+
+			$srcset = \Api\Media::imageproxy($src);
+
+    		$imgurl = \Api\Media::imageURLCDN($src);
+
 			if( !$img->hasAttribute('data-srcset') ) {
-				$img->setAttribute('data-srcset', $proxy);
-			}
-			if( !$img->hasAttribute('data-src') ) {
-				$img->setAttribute('data-src', $image['finalsrc']);
+				$img->setAttribute('data-srcset', $srcset);
 			}
 			if( !$img->hasAttribute('data-sizes') ) {
 				$img->setAttribute('data-sizes', 'auto');
 			}
-			if( !$img->hasAttribute('data-aspectratio') ) {
-				$img->setAttribute('data-aspectratio', $image['width'].'/'.$image['height']);
-			}
 			if( !$img->hasAttribute('width') ) {
-				$img->setAttribute('width', $image['width']);
+				$img->setAttribute('width', 'auto');
 			}
 			if( !$img->hasAttribute('height') ) {
-				$img->setAttribute('height', $image['height']);
+				$img->setAttribute('height', 'auto');
 			}
-			$img->setAttribute('src', $image['finalsrc']);
+			$img->setAttribute('src', $imgurl);
 		}
 	}
 	return $post->saveHTML();
@@ -329,3 +321,60 @@ function get_post_id_by_name( $post_name, $post_type = 'post' ) {
     ));
     return array_shift( $post_ids );
 }
+
+
+function aa_global_settings_head() {
+
+	ob_start();
+	
+	$cdn = defined('_APP_IMG_CDN') && _APP_IMG_CDN ? _APP_IMG_CDN : '';
+
+	$apibase = defined('_APP_CDN') && _APP_CDN ? _APP_CDN : home_url();
+
+	?>
+
+	<script type="text/javascript">
+		window.AA_JS_OBJ = {
+			API_BASE: '<?php echo $apibase; ?>',
+			IMAGE_CDN: '<?php echo "$cdn"; ?>',
+			HOME_URL: '<?php echo home_url(); ?>',
+			SRCSET: function($url) {
+				<?php if( $cdn ): ?>
+					return `
+					<?php echo $cdn; ?>/q_lossless+w_400+to_webp+ret_img/${$url} 400w,
+					<?php echo $cdn; ?>/q_lossless+w_600+to_webp+ret_img/${$url} 600w,
+					<?php echo $cdn; ?>/q_lossless+w_800+to_webp+ret_img/${$url} 800w,
+					<?php echo $cdn; ?>/q_lossless+w_1600+to_webp+ret_img/${$url} 1600w,
+					<?php echo $cdn; ?>/q_lossless+w_1920+to_webp+ret_img/${$url} 1920w,
+					<?php echo $cdn; ?>/q_lossless+w_2050+to_webp+ret_img/${$url} 2050w
+					`;
+				<?php else: ?>
+					return $url;
+				<?php endif; ?>
+			},
+			CDNSRCMIN: function($url) {
+				<?php if( $cdn ): ?>
+				return `<?php echo $cdn; ?>/q_lossless+w_100+to_webp+ret_img/${$url}`;
+				<?php else: ?>
+				return $url;
+				<?php endif; ?>
+			},
+			CDNSRC: function($url) {
+				<?php if( $cdn ): ?>
+				return `<?php echo $cdn; ?>/q_lossless+to_webp+ret_img/${$url}`;
+				<?php else: ?>
+				return $url;
+				<?php endif; ?>
+			}
+		};
+	</script>
+
+	<?php
+
+	$html = ob_get_clean();
+
+	echo $html;
+
+}
+
+add_action('wp_head', 'aa_global_settings_head');

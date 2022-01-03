@@ -51,5 +51,5 @@ Block::make( __( 'Accordion Secondary' ) )
     </div>
     <?php
     $html = ob_get_clean();
-    echo $html;
+    echo apply_filters('the_content', $html);
 });

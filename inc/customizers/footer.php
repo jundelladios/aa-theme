@@ -60,9 +60,9 @@ function aa_footer_customizer( $wp_customize ) {
     ) );
 
     $wp_customize->add_control( $sectionID . '_header_text_desktop', array(
-        'type' => 'number',
+        'type' => 'text',
         'section' => $sectionID,
-        'label' => __( 'Header Text Desktop (px)', $aaproject['context'] )
+        'label' => __( 'Header Text Desktop', $aaproject['context'] )
     ) );
 
     $wp_customize->add_setting( $sectionID . '_header_text_mobile', array(
@@ -71,9 +71,9 @@ function aa_footer_customizer( $wp_customize ) {
     ) );
 
     $wp_customize->add_control( $sectionID . '_header_text_mobile', array(
-        'type' => 'number',
+        'type' => 'text',
         'section' => $sectionID,
-        'label' => __( 'Header Text Mobile (px)', $aaproject['context'] )
+        'label' => __( 'Header Text Mobile', $aaproject['context'] )
     ) );
 
     // Footer Text
@@ -84,9 +84,9 @@ function aa_footer_customizer( $wp_customize ) {
     ) );
 
     $wp_customize->add_control( $sectionID . '_body_text_desktop', array(
-        'type' => 'number',
+        'type' => 'text',
         'section' => $sectionID,
-        'label' => __( 'Body Text Desktop (px)', $aaproject['context'] )
+        'label' => __( 'Body Text Desktop', $aaproject['context'] )
     ) );
 
     $wp_customize->add_setting( $sectionID . '_body_text_mobile', array(
@@ -95,9 +95,9 @@ function aa_footer_customizer( $wp_customize ) {
     ) );
 
     $wp_customize->add_control( $sectionID . '_body_text_mobile', array(
-        'type' => 'number',
+        'type' => 'text',
         'section' => $sectionID,
-        'label' => __( 'Body Text Mobile (px)', $aaproject['context'] )
+        'label' => __( 'Body Text Mobile', $aaproject['context'] )
     ) );
     
     

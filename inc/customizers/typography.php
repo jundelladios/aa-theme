@@ -46,9 +46,9 @@ function aa_typography_customizer( $wp_customize ) {
     ) );
 
     $wp_customize->add_control( $sectionID . '_text_desktop', array(
-        'type' => 'number',
+        'type' => 'text',
         'section' => $sectionID,
-        'label' => __( 'Body Text Desktop (px)', $aaproject['context'] ),
+        'label' => __( 'Body Text Desktop', $aaproject['context'] ),
         'description' => 'Default font size on body text.'
     ) );
 
@@ -59,9 +59,9 @@ function aa_typography_customizer( $wp_customize ) {
     ) );
 
     $wp_customize->add_control( $sectionID . '_text_mobile', array(
-        'type' => 'number',
+        'type' => 'text',
         'section' => $sectionID,
-        'label' => __( 'Body Text Mobile (px)', $aaproject['context'] )
+        'label' => __( 'Body Text Mobile', $aaproject['context'] )
     ) );
 
 }

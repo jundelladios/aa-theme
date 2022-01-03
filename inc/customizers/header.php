@@ -38,9 +38,9 @@ function aa_header_customizer( $wp_customize ) {
     ) );
 
     $wp_customize->add_control( $sectionID . '_tagsize', array(
-        'type' => 'number',
+        'type' => 'text',
         'section' => $sectionID,
-		'label' => __( 'Tagline Fontsize (px)', $aaproject['context'] )
+		'label' => __( 'Tagline Fontsize', $aaproject['context'] )
 	) );
 
 
@@ -50,9 +50,9 @@ function aa_header_customizer( $wp_customize ) {
     ) );
 
     $wp_customize->add_control( $sectionID . '_tagsize_mobile', array(
-        'type' => 'number',
+        'type' => 'text',
         'section' => $sectionID,
-		'label' => __( 'Tagline Fontsize Mobile (px)', $aaproject['context'] )
+		'label' => __( 'Tagline Fontsize Mobile', $aaproject['context'] )
 	) );
 
 
@@ -75,9 +75,9 @@ function aa_header_customizer( $wp_customize ) {
     ) );
 
     $wp_customize->add_control( $sectionID . '_logo', array(
-        'type' => 'number',
+        'type' => 'text',
         'section' => $sectionID,
-		'label' => __( 'Logo Size Desktop (px)', $aaproject['context'] )
+		'label' => __( 'Logo Size Desktop', $aaproject['context'] )
 	) );
 
 	$wp_customize->add_setting( $sectionID . '_logo_mobile', array(
@@ -88,7 +88,7 @@ function aa_header_customizer( $wp_customize ) {
     $wp_customize->add_control( $sectionID . '_logo_mobile', array(
         'type' => 'text',
         'section' => $sectionID,
-		'label' => __( 'Logo Size Mobile (px)', $aaproject['context'] )
+		'label' => __( 'Logo Size Mobile', $aaproject['context'] )
 	) );
 
 

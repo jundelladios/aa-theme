@@ -24,9 +24,9 @@ function aa_layout_customizer( $wp_customize ) {
     ) );
 
     $wp_customize->add_control( $sectionID . '_gutter_spacing_desktop', array(
-        'type' => 'number',
+        'type' => 'text',
         'section' => $sectionID,
-        'label' => __( 'Gutter Spacing Desktop (px)', $aaproject['context'] ),
+        'label' => __( 'Gutter Spacing Desktop', $aaproject['context'] ),
         'description' => 'Spacing from top and bottom on each containers to make them consistent.'
     ) );
 
@@ -36,9 +36,9 @@ function aa_layout_customizer( $wp_customize ) {
     ) );
 
     $wp_customize->add_control( $sectionID . '_gutter_spacing_mobile', array(
-        'type' => 'number',
+        'type' => 'text',
         'section' => $sectionID,
-        'label' => __( 'Gutter Spacing Tablet/Mobile (px)', $aaproject['context'] )
+        'label' => __( 'Gutter Spacing Tablet/Mobile', $aaproject['context'] )
     ) );
 }
 add_action( 'customize_register', 'aa_layout_customizer' );
