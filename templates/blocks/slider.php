@@ -51,7 +51,7 @@ Block::make( __( 'Slider' ) )
                     $alt = get_the_title( $slide['image'] );
                     $maxwidth = isset( $slide['content_width'] ) ? (int) $slide['content_width'] : 0;
                 ?>
-                <?php if( $image[0] ): ?>
+                <?php if( $image && $image[0] ): ?>
                     <div class="slider-item slideindex<?php echo $slideindex; ?> <?php echo isset( $slide['css_class'] ) ? $slide['css_class'] : ""; ?>">
 
                         <div class="slide-bg ">
