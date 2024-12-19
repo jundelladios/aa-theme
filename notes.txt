@@ -1,0 +1,16 @@
+var image = wp.media({
+    title: 'Choose product image',
+    multiple: false
+}).open()
+.on('select', function(e) {
+    var uploaded_image = image.state().get('selection').first();
+    console.log(uploaded_image);
+    var image_url = uploaded_image.toJSON().url;
+    console.log(image_url);
+});
+
+
+
+// migration
+
+UPDATE MyTable SET textfield = REPLACE(textfield, "http://oldurl.com/", "http://newurl.com")
