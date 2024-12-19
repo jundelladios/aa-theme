@@ -17,7 +17,7 @@ function aa_typography_customizer( $wp_customize ) {
     $sectionID = "font_customizer";
 
     $wp_customize->add_section( $sectionID, array(
-		'title' => __( 'Fonts', $aaproject['context'] )
+		'title' => __( 'Fonts', 'american-accennts-theme' )
     ));
         
 
@@ -31,7 +31,7 @@ function aa_typography_customizer( $wp_customize ) {
         $sectionID . '_font_style',
         array(
             'settings' => $sectionID . '_font_style',
-            'label' => __( 'Choose Font Style', $aaproject['context'] ),
+            'label' => __( 'Choose Font Style', 'american-accennts-theme' ),
             'description' => 'Fonts styles from google fonts. <a href="https://fonts.google.com/" target="_blank">Google Fonts</a>, If you want to add more font contact <a href="mailto:'.$aaproject['dev'].'" target="_blank">Developer</a>',
             'section' => $sectionID,
             'type' => 'select',
@@ -48,7 +48,7 @@ function aa_typography_customizer( $wp_customize ) {
     $wp_customize->add_control( $sectionID . '_text_desktop', array(
         'type' => 'text',
         'section' => $sectionID,
-        'label' => __( 'Body Text Desktop', $aaproject['context'] ),
+        'label' => __( 'Body Text Desktop', 'american-accennts-theme' ),
         'description' => 'Default font size on body text.'
     ) );
 
@@ -61,7 +61,7 @@ function aa_typography_customizer( $wp_customize ) {
     $wp_customize->add_control( $sectionID . '_text_mobile', array(
         'type' => 'text',
         'section' => $sectionID,
-        'label' => __( 'Body Text Mobile', $aaproject['context'] )
+        'label' => __( 'Body Text Mobile', 'american-accennts-theme' )
     ) );
 
 }

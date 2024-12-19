@@ -68,7 +68,15 @@ function aa_menu_content_post() {
             'rewrite' => array('slug' => 'sc-content'),
 			'show_in_rest' => true,
             'menu_icon' => 'dashicons-menu',
-            'exclude_from_search' => true
+            'exclude_from_search' => true,
+            'supports' => array( 
+                'title', 
+                'editor', 
+                'excerpt', 
+                'thumbnail', 
+                'custom-fields', 
+                'revisions' 
+            )
         )
     );
 }

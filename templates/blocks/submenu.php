@@ -19,7 +19,7 @@ use Carbon_Fields\Block;
 // }
 
 Block::make( __( 'Sub Menus' ) )
-->set_category( 'aa_blocks', __( 'American Accents', $aaproject['context'] ), 'dashicons-menu' )
+->set_category( 'aa_blocks', __( 'American Accents', 'american-accennts-theme' ), 'dashicons-menu' )
 ->set_inner_blocks( false )
 ->add_fields( array(
     Field::make( 'complex', 'column', '' )
@@ -27,17 +27,17 @@ Block::make( __( 'Sub Menus' ) )
     ->set_collapsed( true )
     ->set_max(4)
     ->add_fields( array(
-        Field::make( 'complex', 'submenus', __( 'Submenus', $aaproject['context'] ) )
+        Field::make( 'complex', 'submenus', __( 'Submenus', 'american-accennts-theme' ) )
         ->set_collapsed( true )
         ->add_fields( array(
             Field::make( 'text', 'ptitle', 'Menu Group Title' )->set_width( 50 ),
             Field::make( 'text', 'psubtext', 'Menu Group Subtitle' )->set_width( 50 ),
             Field::make( 'text', 'plink', 'Menu Group Link' ),
-            Field::make( 'complex', 'gitems', __( 'Menu Group Items', $aaproject['context'] ) )
+            Field::make( 'complex', 'gitems', __( 'Menu Group Items', 'american-accennts-theme' ) )
             ->set_collapsed( true )
             ->add_fields( array(
                 Field::make( 'text', 'stitle', 'Menu Group Item Title' ),
-                Field::make( 'complex', 'items', __( 'Submenu Items', $aaproject['context'] ) )
+                Field::make( 'complex', 'items', __( 'Submenu Items', 'american-accennts-theme' ) )
                 ->set_collapsed( true )
                 ->add_fields( array(
                     Field::make( 'text', 'text', 'Menu Link Text' )->set_width( 50 ),

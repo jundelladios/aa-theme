@@ -25,7 +25,7 @@ function aa_customizer_color_loaders( $theme_colors, $wp_customize, $sectionID )
 
         $wp_customize->add_control(
             new WP_Customize_Color_Control( $wp_customize, $color['id'], array(
-                'label' => __( $color['label'], $aaproject['context'] ),
+                'label' => __( $color['label'], 'american-accennts-theme' ),
                 'section' => $sectionID,
                 'settings' => $color['id']
             ) ) 

@@ -36,3 +36,7 @@ require get_template_directory() . '/admin/admin.php';
  * php scss
  */
 require get_template_directory() . '/inc/scss.inc.php';
+
+
+require get_template_directory() . '/reusables.php';
+

@@ -147,8 +147,93 @@
             return false;
         });
 
+
+        // download files api attributes
+        $(document).on('click', '[api-zip-files]', function() {
+
+            const zipbtn = $(this);
+
+            zipbtn.css({ opacity: 0.5 });
+            
+            var files = $(this).attr('api-zip-files');
+            var output = $(this).attr('api-zip-download') || 'downloads.zip';
+
+            files = files.split(',');
+
+            if(!files.length) { return; }
+
+            jQuery.ajax({
+                url: '/wp-json/v1/download/archive',
+                type: 'POST',
+                cache:false,
+                data: { 
+                    files: files,
+                    output_filename: output
+                },
+                xhrFields:{
+                    responseType: 'blob'
+                },
+                success: function(data){
+                    var url = window.URL || window.webkitURL;
+                    var file = url.createObjectURL(data);
+            
+                    var link = document.createElement('a');
+                    link.setAttribute('href', file);
+                    link.setAttribute('download', output);
+                    link.click();
+            
+                    setTimeout(function(){  
+                        link.remove();
+                        url.revokeObjectURL(file);
+                    }, 1);
+
+                    zipbtn.css({ opacity: 1 });
+                },
+                error: function() {
+                    zipbtn.css({ opacity: 1 });
+                }
+            });
+
+            return false;
+
+        });
+
+    });
+
+
+    $(document).on('click', '[api-email-send]', function() {
+        var bodycontent = $(this).data(`email-body`);
+        var subject = $(this).data('email-subject');
+        const emailParam = jQuery.param({
+            subject: subject,
+            body: bodycontent
+        });
+    
+        window.open(`mailto:?${emailParam}`);
+        return false;
+    });
+
+
+    $(document).on('click', '.aa_social_share', function() {
+        return JSShare.go($(this)[0]);
+    });
+
+    $(document).on('click', '[aa-modal-share]', function() {
+        if($('.social-share-modal-module').length) {
+            $('.social-share-modal-module').modal('show');
+            $('.social-share-modal-module .aa_social_share').attr('data-url', $(this).attr('aa-modal-share'));
+        }
+        return false;
     });
     
+
+    // check if top header announcement fixed exists
+    $(document).on('DOMNodeInserted', function(e) {
+        if ( $(e.target).hasClass('bulletinwp-placement-top') && $('.bulletinwp-placement-top').length < 2 ) {
+            $('header').before($(e.target).clone().addClass('fixed-duplicate-bulletinwp'));
+            $(e.target).css({ opacity: 0 });
+        }
+    });
 
 } )( jQuery );
 

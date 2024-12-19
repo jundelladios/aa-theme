@@ -10,13 +10,15 @@
 // adding custom attribute for wp images
 add_filter( 'wp_get_attachment_image_attributes', 'aa_change_attachment_image_markup' );
 function aa_change_attachment_image_markup($attributes) {
-	if( $attributes['src'] ) {
+	if( $attributes['src'] && !is_admin() ) {
 
-		if( defined( '_APP_IMG_CDN' ) ) {
+		$excludesLazyload = explode(',', preg_replace("/\r|\n/", "", carbon_get_theme_option('aa_admin_settings_nolazyloadlists')));
+    	$isExcludeLazyload = array_search($attributes['src'], $excludesLazyload);
 
-			$srcset = \Api\Media::imageproxy($attributes['src']);
+		$srcset = \Api\Media::imageproxy($attributes['src']);
+		$imgurl = \Api\Media::imageURLCDN($attributes['src']);
 
-    		$imgurl = \Api\Media::imageURLCDN($attributes['src']);
+		if( carbon_get_theme_option('aa_admin_settings_cdnproxy') && !is_int($isExcludeLazyload) ) {
 
 			if( !isset( $attributes['data-srcset'] ) ) {
 				$attributes['data-srcset'] = $srcset;
@@ -25,22 +27,26 @@ function aa_change_attachment_image_markup($attributes) {
 			if( !isset( $attributes['data-sizes'] ) ) {
 				$attributes['data-sizes'] = 'auto';
 			}
+
+			$attributes['class'] .= ' lazyload lz-blur';
+
+			$attributes['src'] = "data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%200%200'%3E%3C/svg%3E";
 			
-			if( !isset( $attributes['width'] ) ) {
-				$attributes['width'] = 'auto';
+		} else {
+
+			$imgdetails = wpdb_image_attachment_details($attributes['src']);
+			if($imgdetails) {
+				$attributes['width'] = $imgdetails['width'];
+				$attributes['height'] = $imgdetails['height'];
+				$attributes['alt'] = $imgdetails['alt'];
 			}
-			
-			if( !isset( $attributes['height'] ) ) {
-				$attributes['height'] = 'auto';
-			}
+
+			$attributes['loading'] = "eager";
 
 			$attributes['src'] = $imgurl;
-
 		}
-		
-	}
 
-	$attributes['class'] .= ' lazyload lz-blur';
+	}
 
 	return $attributes;
 }
@@ -60,29 +66,43 @@ function aa_wp_make_response_image_srcsets($the_content) {
 	);
     $imgs = $post->getElementsByTagName('img');
 	foreach( $imgs as $img ) {
+
 		$src = $img->getAttribute('src');
-		$img->setAttribute('class', $img->getAttribute('class') . ' lazyload lz-blur');
+		
+		$excludesLazyload = explode(',', preg_replace("/\r|\n/", "", carbon_get_theme_option('aa_admin_settings_nolazyloadlists')));
+    	$isExcludeLazyload = array_search($src, $excludesLazyload);
 
-		if( defined( '_APP_IMG_CDN' ) && $src ) {
+		$srcset = \Api\Media::imageproxy($src);
 
-			$srcset = \Api\Media::imageproxy($src);
+		$imgurl = \Api\Media::imageURLCDN($src);
 
-    		$imgurl = \Api\Media::imageURLCDN($src);
-
+		if( carbon_get_theme_option('aa_admin_settings_cdnproxy') && !is_int($isExcludeLazyload) && !is_admin() ) {
 			if( !$img->hasAttribute('data-srcset') ) {
 				$img->setAttribute('data-srcset', $srcset);
 			}
 			if( !$img->hasAttribute('data-sizes') ) {
 				$img->setAttribute('data-sizes', 'auto');
 			}
-			if( !$img->hasAttribute('width') ) {
-				$img->setAttribute('width', 'auto');
+
+			$img->setAttribute('class', $img->getAttribute('class')." lazyload lz-blur");
+
+			$img->setAttribute('src', "data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%200%200'%3E%3C/svg%3E");
+
+		} else {
+
+			$imgdetails = wpdb_image_attachment_details($img->getAttribute('src'));
+			if($imgdetails) {
+				$img->setAttribute('width', $imgdetails['width']);
+				$img->setAttribute('height', $imgdetails['height']);
+				$img->setAttribute('alt', $imgdetails['alt']);
 			}
-			if( !$img->hasAttribute('height') ) {
-				$img->setAttribute('height', 'auto');
-			}
+			
+			$img->setAttribute('loading', "eager");
+
 			$img->setAttribute('src', $imgurl);
+
 		}
+
 	}
 	return $post->saveHTML();
 }
@@ -205,7 +225,7 @@ function aa_posted_on() {
 	);
 	$posted_on = sprintf(
 		/* translators: %s: post date. */
-		esc_html_x( 'Posted on %s', 'post date', $aaproject['context'] ),
+		esc_html_x( 'Posted on %s', 'post date', 'american-accennts-theme' ),
 		'<a href="' . esc_url( get_permalink() ) . '" rel="bookmark">' . $time_string . '</a>'
 	);
 	echo '<span class="posted-on">' . $posted_on . '</span>'; // WPCS: XSS OK.
@@ -218,7 +238,7 @@ function aa_posted_by() {
 	global $aaproject;
 	$byline = sprintf(
 		/* translators: %s: post author. */
-		esc_html_x( 'by %s', 'post author', $aaproject['context'] ),
+		esc_html_x( 'by %s', 'post author', 'american-accennts-theme' ),
 		'<span class="author vcard"><a class="url fn n" href="' . esc_url( get_author_posts_url( get_the_author_meta( 'ID' ) ) ) . '">' . esc_html( get_the_author() ) . '</a></span>'
 	);
 	echo '<span class="byline"> ' . $byline . '</span>'; // WPCS: XSS OK.
@@ -233,17 +253,17 @@ function aa_entry_footer() {
 	// Hide category and tag text for pages.
 	if ( 'post' === get_post_type() ) {
 		/* translators: used between list items, there is a space after the comma */
-		$categories_list = get_the_category_list( esc_html__( ', ', $aaproject['context'] ) );
+		$categories_list = get_the_category_list( esc_html__( ', ', 'american-accennts-theme' ) );
 		if ( $categories_list ) {
 			/* translators: 1: list of categories. */
-			printf( '<span class="cat-links">' . esc_html__( 'Posted in %1$s', $aaproject['context'] ) . '</span>', $categories_list ); // WPCS: XSS OK.
+			printf( '<span class="cat-links">' . esc_html__( 'Posted in %1$s', 'american-accennts-theme' ) . '</span>', $categories_list ); // WPCS: XSS OK.
 		}
 
 		/* translators: used between list items, there is a space after the comma */
-		$tags_list = get_the_tag_list( '', esc_html_x( ', ', 'list item separator', $aaproject['context'] ) );
+		$tags_list = get_the_tag_list( '', esc_html_x( ', ', 'list item separator', 'american-accennts-theme' ) );
 		if ( $tags_list ) {
 			/* translators: 1: list of tags. */
-			printf( '<span class="tags-links">' . esc_html__( 'Tagged %1$s', $aaproject['context'] ) . '</span>', $tags_list ); // WPCS: XSS OK.
+			printf( '<span class="tags-links">' . esc_html__( 'Tagged %1$s', 'american-accennts-theme' ) . '</span>', $tags_list ); // WPCS: XSS OK.
 		}
 	}
 	if ( ! is_single() && ! post_password_required() && ( comments_open() || get_comments_number() ) ) {
@@ -252,7 +272,7 @@ function aa_entry_footer() {
 			sprintf(
 				wp_kses(
 					/* translators: %s: post title */
-					__( 'Leave a Comment<span class="screen-reader-text"> on %s</span>', $aaproject['context'] ),
+					__( 'Leave a Comment<span class="screen-reader-text"> on %s</span>', 'american-accennts-theme' ),
 					array(
 						'span' => array(
 							'class' => array(),
@@ -268,7 +288,7 @@ function aa_entry_footer() {
 		sprintf(
 			wp_kses(
 				/* translators: %s: Name of current post. Only visible to screen readers */
-				__( 'Edit <span class="screen-reader-text">%s</span>', $aaproject['context'] ),
+				__( 'Edit <span class="screen-reader-text">%s</span>', 'american-accennts-theme' ),
 				array(
 					'span' => array(
 						'class' => array(),
@@ -327,9 +347,9 @@ function aa_global_settings_head() {
 
 	ob_start();
 	
-	$cdn = defined('_APP_IMG_CDN') && _APP_IMG_CDN ? _APP_IMG_CDN : '';
+	$cdn = carbon_get_theme_option('aa_admin_settings_cdnproxy');
 
-	$apibase = defined('_APP_CDN') && _APP_CDN ? _APP_CDN : home_url();
+	$apibase = home_url();
 
 	?>
 
@@ -338,15 +358,16 @@ function aa_global_settings_head() {
 			API_BASE: '<?php echo $apibase; ?>',
 			IMAGE_CDN: '<?php echo "$cdn"; ?>',
 			HOME_URL: '<?php echo home_url(); ?>',
+			IMG_PRELOADER: "data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%200%200'%3E%3C/svg%3E",
 			SRCSET: function($url) {
 				<?php if( $cdn ): ?>
+					var imagecdnproxy = $url.replace('<?php echo home_url(); ?>', '<?php echo $cdn; ?>');
 					return `
-					<?php echo $cdn; ?>/q_lossless+w_400+to_webp+ret_img/${$url} 400w,
-					<?php echo $cdn; ?>/q_lossless+w_600+to_webp+ret_img/${$url} 600w,
-					<?php echo $cdn; ?>/q_lossless+w_800+to_webp+ret_img/${$url} 800w,
-					<?php echo $cdn; ?>/q_lossless+w_1600+to_webp+ret_img/${$url} 1600w,
-					<?php echo $cdn; ?>/q_lossless+w_1920+to_webp+ret_img/${$url} 1920w,
-					<?php echo $cdn; ?>/q_lossless+w_2050+to_webp+ret_img/${$url} 2050w
+					${imagecdnproxy}?width=400 600w,
+					${imagecdnproxy}?width=600 800w,
+					${imagecdnproxy}?width=800 1600w,
+					${imagecdnproxy}?width=1600 1900w,
+					${imagecdnproxy} 2050w
 					`;
 				<?php else: ?>
 					return $url;
@@ -354,14 +375,14 @@ function aa_global_settings_head() {
 			},
 			CDNSRCMIN: function($url) {
 				<?php if( $cdn ): ?>
-				return `<?php echo $cdn; ?>/q_lossless+w_100+to_webp+ret_img/${$url}`;
+				return `data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%200%200'%3E%3C/svg%3E`;
 				<?php else: ?>
 				return $url;
 				<?php endif; ?>
 			},
 			CDNSRC: function($url) {
 				<?php if( $cdn ): ?>
-				return `<?php echo $cdn; ?>/q_lossless+to_webp+ret_img/${$url}`;
+				return `data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%200%200'%3E%3C/svg%3E`;
 				<?php else: ?>
 				return $url;
 				<?php endif; ?>

@@ -23,16 +23,19 @@ use Carbon_Fields\Block;
 // }
 
 Block::make( __( 'Category Menus' ) )
-->set_category( 'aa_blocks', __( 'American Accents', $aaproject['context'] ), 'dashicons-menu' )
+->set_category( 'aa_blocks', __( 'American Accents', 'american-accennts-theme' ), 'dashicons-menu' )
 ->set_inner_blocks( false )
 ->add_fields( array(
     // Field::make( 'html', 'cmenuhtml' )
     // ->set_html( '<h2>Category Menu</h2>'. $notice ),
+    Field::make( 'checkbox', 'submenu_tags_link', __( 'Enable submenu tags link?', 'american-accents-theme' ) ),
+    Field::make( 'text', 'submenu_shop_all_text', __( 'Shop ALL Text', 'american-accents-theme' ) ),
+    Field::make( 'text', 'submenu_shop_all_link', __( 'Shop ALL Link', 'american-accents-theme' ) ),
     Field::make( 'complex', 'column', '' )
     ->set_layout( 'tabbed-horizontal' )
     ->set_max(4)
     ->add_fields( array(
-        Field::make( 'complex', 'rowmenu', __( 'Reference Rows', $aaproject['context'] ) )
+        Field::make( 'complex', 'rowmenu', __( 'Reference Rows', 'american-accennts-theme' ) )
         ->add_fields( array(
             Field::make( 'text', 'cat_ref', 'Enter Category REF ID' )
         ))
@@ -43,6 +46,7 @@ Block::make( __( 'Category Menus' ) )
 
     if( function_exists( 'aa_sc_category' ) ) {
         ob_start();
+        $submenutaglink = (int) $fields['submenu_tags_link'];
         ?>
         <div class="aa-submenu-module <?php echo $attributes ? $attributes['className'] : ''; ?>">
             <div class="row">
@@ -51,12 +55,21 @@ Block::make( __( 'Category Menus' ) )
                     <div class="col-lg-<?php echo $grids; ?>">
                         <?php if( $column['rowmenu'] ): ?>
                             <?php foreach( $column['rowmenu'] as $rowmenu ): ?>
-                                <?php echo '[aa_sc_category ref_id="' . $rowmenu['cat_ref'] . '"]'; ?>
+                                <?php echo '[aa_sc_category ref_id="' . $rowmenu['cat_ref'] . '" submenutag='.$submenutaglink.']'; ?>
                             <?php endforeach; ?>
                         <?php endif; ?>
                     </div>
                 <?php endforeach; ?>
             </div>
+            
+            <?php if($fields['submenu_shop_all_text']): ?>
+            <div class="row shop-all-text-menu">
+                <div class="col-lg-12 d-flex justify-content-end">
+                    <a href="<?php echo $fields['submenu_shop_all_link'] ?? '#'; ?>" class="shop-all-link text-uppercase font-weight-bold mr-3"><?php echo $fields['submenu_shop_all_text']; ?></a>
+                </div>
+            </div>
+            <?php endif; ?>
+
         </div>
         <?php
         $html = ob_get_clean();

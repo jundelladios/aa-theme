@@ -15,7 +15,7 @@ function aa_footer_customizer( $wp_customize ) {
 	$sectionID = "footer_customizer";
 	
 	$wp_customize->add_section( $sectionID, array(
-		'title' => __( 'Footer', $aaproject['context'] )
+		'title' => __( 'Footer', 'american-accennts-theme' )
 	));
 	
     $theme_colors = array();
@@ -62,7 +62,7 @@ function aa_footer_customizer( $wp_customize ) {
     $wp_customize->add_control( $sectionID . '_header_text_desktop', array(
         'type' => 'text',
         'section' => $sectionID,
-        'label' => __( 'Header Text Desktop', $aaproject['context'] )
+        'label' => __( 'Header Text Desktop', 'american-accennts-theme' )
     ) );
 
     $wp_customize->add_setting( $sectionID . '_header_text_mobile', array(
@@ -73,7 +73,7 @@ function aa_footer_customizer( $wp_customize ) {
     $wp_customize->add_control( $sectionID . '_header_text_mobile', array(
         'type' => 'text',
         'section' => $sectionID,
-        'label' => __( 'Header Text Mobile', $aaproject['context'] )
+        'label' => __( 'Header Text Mobile', 'american-accennts-theme' )
     ) );
 
     // Footer Text
@@ -86,7 +86,7 @@ function aa_footer_customizer( $wp_customize ) {
     $wp_customize->add_control( $sectionID . '_body_text_desktop', array(
         'type' => 'text',
         'section' => $sectionID,
-        'label' => __( 'Body Text Desktop', $aaproject['context'] )
+        'label' => __( 'Body Text Desktop', 'american-accennts-theme' )
     ) );
 
     $wp_customize->add_setting( $sectionID . '_body_text_mobile', array(
@@ -97,7 +97,7 @@ function aa_footer_customizer( $wp_customize ) {
     $wp_customize->add_control( $sectionID . '_body_text_mobile', array(
         'type' => 'text',
         'section' => $sectionID,
-        'label' => __( 'Body Text Mobile', $aaproject['context'] )
+        'label' => __( 'Body Text Mobile', 'american-accennts-theme' )
     ) );
     
     

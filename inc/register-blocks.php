@@ -28,7 +28,9 @@ function aa_blocks_lists() {
         'accordion',
         'content',
         'accordion-secondary',
-        'columns'
+        'columns',
+        'blurbmodals',
+        'socialshare'
     ) );
     
 }

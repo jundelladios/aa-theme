@@ -9,14 +9,14 @@
 global $aaproject;
 ?>
 <div class="no-results not-found">
-	<h1 class="page-title"><?php esc_html_e( 'Nothing Found', $aaproject['context'] ); ?></h1>
+	<h1 class="page-title"><?php esc_html_e( 'Nothing Found', 'american-accennts-theme' ); ?></h1>
 	<div class="page-content">
 		<?php
 		if ( is_home() && current_user_can( 'publish_posts' ) ) :
 			printf(
 				'<p>' . wp_kses(
 					/* translators: 1: link to WP admin new post page. */
-					__( 'Ready to publish your first post? <a href="%1$s">Get started here</a>.', $aaproject['context'] ),
+					__( 'Ready to publish your first post? <a href="%1$s">Get started here</a>.', 'american-accennts-theme' ),
 					array(
 						'a' => array(
 							'href' => array(),
@@ -27,12 +27,12 @@ global $aaproject;
 			);
 		elseif ( is_search() ) :
 			?>
-			<p><?php esc_html_e( 'Sorry, but nothing matched your search terms. Please try again with some different keywords.', $aaproject['context'] ); ?></p>
+			<p><?php esc_html_e( 'Sorry, but nothing matched your search terms. Please try again with some different keywords.', 'american-accennts-theme' ); ?></p>
 			<?php
 			get_search_form();
 		else :
 			?>
-			<p><?php esc_html_e( 'It seems we can&rsquo;t find what you&rsquo;re looking for. Perhaps searching can help.', $aaproject['context'] ); ?></p>
+			<p><?php esc_html_e( 'It seems we can&rsquo;t find what you&rsquo;re looking for. Perhaps searching can help.', 'american-accennts-theme' ); ?></p>
 			<?php
 			get_search_form();
 

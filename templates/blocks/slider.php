@@ -12,7 +12,7 @@ use Carbon_Fields\Field;
 use Carbon_Fields\Block;
 
 Block::make( __( 'Slider' ) )
-->set_category( 'aa_blocks', __( 'American Accents', $aaproject['context'] ), 'dashicons-home' )
+->set_category( 'aa_blocks', __( 'American Accents', 'american-accennts-theme' ), 'dashicons-home' )
 ->set_inner_blocks( false )
 ->add_fields( array(
     Field::make( 'html', 'cmenuhtml' )
@@ -58,9 +58,7 @@ Block::make( __( 'Slider' ) )
 
                             <?php aa_lazyimg([
                                 'src' => $image[0],
-                                'alt' => $alt,
-                                'width' => 'auto',
-                                'height' => 'auto'
+                                'alt' => $alt
                             ]); ?>
 
                             <div class="slide-container-wrap">
@@ -96,7 +94,6 @@ Block::make( __( 'Slider' ) )
                 nextArrow: `<button type="button" class="slick-indicator slick-next"><span class="icon icon-arrow-right"></span></button>`,
                 dots: true,
                 infinite: false,
-                arrows: !mediaQ.lg,
                 <?php
                     $interval = (int) $fields['autoplayinterval'];
                     if( $interval ) {

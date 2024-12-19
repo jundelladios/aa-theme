@@ -12,7 +12,7 @@ use Carbon_Fields\Field;
 use Carbon_Fields\Block;
 
 Block::make( __( 'Accordion Secondary' ) )
-->set_category( 'aa_blocks', __( 'American Accents', $aaproject['context'] ), 'dashicons-home' )
+->set_category( 'aa_blocks', __( 'American Accents', 'american-accennts-theme' ), 'dashicons-home' )
 ->set_inner_blocks( false )
 ->add_fields( array(
     Field::make( 'html', 'cmenuhtml' )
@@ -24,7 +24,7 @@ Block::make( __( 'Accordion Secondary' ) )
         Field::make( 'text', 'accordion_secondary_id', 'Accordion ID (must be unique, used to navigate from link, please avoid spaces or special character | ex: printing-characteristics)' ),
         Field::make( 'rich_text', 'acc_secondary_content', 'Accordion Content' ),
     ))
-    ->set_header_template( 'Accordion Secondary <%- $_index+1 %>' )
+    ->set_header_template( 'Accordion Secondary(<%- $_index+1 %>) | <%- accordion_secondary_title %>' )
 ))
 ->set_render_callback( function( $fields, $attributes, $inner_blocks ) {
     ob_start();

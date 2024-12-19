@@ -15,7 +15,7 @@ function aa_colors_customizer( $wp_customize ) {
     $sectionID = "colors_customizer";
     
     $wp_customize->add_section( $sectionID, array(
-		'title' => __( 'Theme Colors', $aaproject['context'] )
+		'title' => __( 'Theme Colors', 'american-accennts-theme' )
 	));
 
     $theme_colors = array();

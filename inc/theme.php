@@ -38,7 +38,7 @@ function aa_system_setup() {
 
 	// This theme uses wp_nav_menu() in one location.
 	register_nav_menus( array(
-		'menu-1' => esc_html__( 'Top Header', $aaproject['context'] ),
+		'menu-1' => esc_html__( 'Top Header', 'american-accennts-theme' ),
 	) );
 
 	/*

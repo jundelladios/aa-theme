@@ -26,7 +26,7 @@ function aa_header_customizer( $wp_customize ) {
     $wp_customize->add_control( $sectionID . '_tagline', array(
         'type' => 'text',
         'section' => $sectionID,
-		'label' => __( 'Header Tagline', $aaproject['context'] ),
+		'label' => __( 'Header Tagline', 'american-accennts-theme' ),
 		'description' => '<span>This will be under the logo.</span>'
 	) );
 
@@ -40,7 +40,7 @@ function aa_header_customizer( $wp_customize ) {
     $wp_customize->add_control( $sectionID . '_tagsize', array(
         'type' => 'text',
         'section' => $sectionID,
-		'label' => __( 'Tagline Fontsize', $aaproject['context'] )
+		'label' => __( 'Tagline Fontsize', 'american-accennts-theme' )
 	) );
 
 
@@ -52,7 +52,7 @@ function aa_header_customizer( $wp_customize ) {
     $wp_customize->add_control( $sectionID . '_tagsize_mobile', array(
         'type' => 'text',
         'section' => $sectionID,
-		'label' => __( 'Tagline Fontsize Mobile', $aaproject['context'] )
+		'label' => __( 'Tagline Fontsize Mobile', 'american-accennts-theme' )
 	) );
 
 
@@ -63,7 +63,7 @@ function aa_header_customizer( $wp_customize ) {
 	$theme_colors[] = array(
 		'id' => $sectionID.'_bg',
 		'default' => '#383838',
-		'label' => __('Header Background', $aaproject['context'])
+		'label' => __('Header Background', 'american-accennts-theme')
 	);
 
 	aa_customizer_color_loaders( $theme_colors, $wp_customize, $sectionID );
@@ -77,7 +77,7 @@ function aa_header_customizer( $wp_customize ) {
     $wp_customize->add_control( $sectionID . '_logo', array(
         'type' => 'text',
         'section' => $sectionID,
-		'label' => __( 'Logo Size Desktop', $aaproject['context'] )
+		'label' => __( 'Logo Size Desktop', 'american-accennts-theme' )
 	) );
 
 	$wp_customize->add_setting( $sectionID . '_logo_mobile', array(
@@ -88,7 +88,7 @@ function aa_header_customizer( $wp_customize ) {
     $wp_customize->add_control( $sectionID . '_logo_mobile', array(
         'type' => 'text',
         'section' => $sectionID,
-		'label' => __( 'Logo Size Mobile', $aaproject['context'] )
+		'label' => __( 'Logo Size Mobile', 'american-accennts-theme' )
 	) );
 
 

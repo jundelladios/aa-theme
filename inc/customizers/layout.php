@@ -15,7 +15,7 @@ function aa_layout_customizer( $wp_customize ) {
     $sectionID = "layout_customizer";
     
     $wp_customize->add_section( $sectionID, array(
-		'title' => __( 'Layout', $aaproject['context'] )
+		'title' => __( 'Layout', 'american-accennts-theme' )
     ));
     
     $wp_customize->add_setting( $sectionID . '_gutter_spacing_desktop', array(
@@ -26,7 +26,7 @@ function aa_layout_customizer( $wp_customize ) {
     $wp_customize->add_control( $sectionID . '_gutter_spacing_desktop', array(
         'type' => 'text',
         'section' => $sectionID,
-        'label' => __( 'Gutter Spacing Desktop', $aaproject['context'] ),
+        'label' => __( 'Gutter Spacing Desktop', 'american-accennts-theme' ),
         'description' => 'Spacing from top and bottom on each containers to make them consistent.'
     ) );
 
@@ -38,7 +38,7 @@ function aa_layout_customizer( $wp_customize ) {
     $wp_customize->add_control( $sectionID . '_gutter_spacing_mobile', array(
         'type' => 'text',
         'section' => $sectionID,
-        'label' => __( 'Gutter Spacing Tablet/Mobile', $aaproject['context'] )
+        'label' => __( 'Gutter Spacing Tablet/Mobile', 'american-accennts-theme' )
     ) );
 }
 add_action( 'customize_register', 'aa_layout_customizer' );

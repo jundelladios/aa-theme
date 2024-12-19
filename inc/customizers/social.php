@@ -27,7 +27,7 @@ function aa_social_media_customizer( $wp_customize ) {
     $wp_customize->add_control( $sectionID . '_facebook', array(
         'type' => 'text',
         'section' => $sectionID,
-		'label' => __( 'Facebook Link', $aaproject['context'] ),
+		'label' => __( 'Facebook Link', 'american-accennts-theme' ),
 		'description' => '<span class="icon-facebook"></span> Enter your facebook link here.'
 	) );
 
@@ -39,7 +39,7 @@ function aa_social_media_customizer( $wp_customize ) {
     $wp_customize->add_control( $sectionID . '_facebook_txt', array(
         'type' => 'text',
         'section' => $sectionID,
-        'label' => __( 'Facebook Text', $aaproject['context'] )
+        'label' => __( 'Facebook Text', 'american-accennts-theme' )
 	) );
 
 	
@@ -52,7 +52,7 @@ function aa_social_media_customizer( $wp_customize ) {
     $wp_customize->add_control( $sectionID . '_twitter', array(
         'type' => 'text',
         'section' => $sectionID,
-		'label' => __( 'Twitter Link', $aaproject['context'] ),
+		'label' => __( 'Twitter Link', 'american-accennts-theme' ),
 		'description' => '<span class="icon-twitter"></span> Enter your twitter link here.'
 	) );
 
@@ -64,7 +64,7 @@ function aa_social_media_customizer( $wp_customize ) {
     $wp_customize->add_control( $sectionID . '_twitter_txt', array(
         'type' => 'text',
         'section' => $sectionID,
-        'label' => __( 'Twitter Text', $aaproject['context'] )
+        'label' => __( 'Twitter Text', 'american-accennts-theme' )
 	) );
 
 	// Instagram
@@ -76,7 +76,7 @@ function aa_social_media_customizer( $wp_customize ) {
     $wp_customize->add_control( $sectionID . '_instagram', array(
         'type' => 'text',
         'section' => $sectionID,
-		'label' => __( 'Instagram Link', $aaproject['context'] ),
+		'label' => __( 'Instagram Link', 'american-accennts-theme' ),
 		'description' => '<span class="icon-instagram-square"></span> Enter your instagram link here.'
 	) );
 	
@@ -88,7 +88,7 @@ function aa_social_media_customizer( $wp_customize ) {
     $wp_customize->add_control( $sectionID . '_instagram_txt', array(
         'type' => 'text',
         'section' => $sectionID,
-        'label' => __( 'Instagram Text', $aaproject['context'] )
+        'label' => __( 'Instagram Text', 'american-accennts-theme' )
 	) );
 
 }

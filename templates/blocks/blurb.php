@@ -12,7 +12,7 @@ use Carbon_Fields\Field;
 use Carbon_Fields\Block;
 
 Block::make( __( 'Blurb Module' ) )
-->set_category( 'aa_blocks', __( 'American Accents', $aaproject['context'] ), 'dashicons-home' )
+->set_category( 'aa_blocks', __( 'American Accents', 'american-accennts-theme' ), 'dashicons-home' )
 ->set_inner_blocks( false )
 ->add_fields( array(
     Field::make( 'html', 'cmenuhtml' )
@@ -31,7 +31,7 @@ Block::make( __( 'Blurb Module' ) )
         Field::make( 'rich_text', 'content', 'Blurb Content' )->set_width( 70 ),
         Field::make( 'text', 'css_class', 'Blurb Item CSS class' )->set_width( 33.33 )->set_default_value( '' )
     ))
-    ->set_header_template( 'Blurb <%- $_index+1 %>' )
+    ->set_header_template( 'Blurb (<%- $_index+1 %>) | <%- title %>' )
 ))
 ->set_render_callback( function( $fields, $attributes, $inner_blocks ) {
     ?>
@@ -61,9 +61,7 @@ Block::make( __( 'Blurb Module' ) )
                                 <div class="img-wrap">
                                     <?php aa_lazyimg([
                                         'src' => $image[0],
-                                        'alt' => $alt,
-                                        'width' => 65,
-                                        'height' => 58
+                                        'alt' => $alt
                                     ]); ?>
                                 </div>
                             <?php endif; ?>    

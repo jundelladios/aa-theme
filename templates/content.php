@@ -32,7 +32,7 @@ global $aaproject;
 		the_content( sprintf(
 			wp_kses(
 				/* translators: %s: Name of current post. Only visible to screen readers */
-				__( 'Continue reading<span class="screen-reader-text"> "%s"</span>', $aaproject['context'] ),
+				__( 'Continue reading<span class="screen-reader-text"> "%s"</span>', 'american-accennts-theme' ),
 				array(
 					'span' => array(
 						'class' => array(),
@@ -42,7 +42,7 @@ global $aaproject;
 			get_the_title()
 		) );
 		wp_link_pages( array(
-			'before' => '<div class="page-links">' . esc_html__( 'Pages:', $aaproject['context'] ),
+			'before' => '<div class="page-links">' . esc_html__( 'Pages:', 'american-accennts-theme' ),
 			'after'  => '</div>',
 		) );
 		?>

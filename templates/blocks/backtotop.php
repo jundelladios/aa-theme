@@ -12,7 +12,7 @@ use Carbon_Fields\Field;
 use Carbon_Fields\Block;
 
 Block::make( __( 'Back to Top Module' ) )
-->set_category( 'aa_blocks', __( 'American Accents', $aaproject['context'] ), 'dashicons-home' )
+->set_category( 'aa_blocks', __( 'American Accents', 'american-accennts-theme' ), 'dashicons-home' )
 ->set_inner_blocks( false )
 ->add_fields( array(
     Field::make( 'html', 'cmenuhtml' )
