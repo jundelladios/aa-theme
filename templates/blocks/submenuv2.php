@@ -62,7 +62,7 @@ Block::make( __( 'Category Menus' ) )
                 <?php endforeach; ?>
             </div>
             
-            <?php if($fields['submenu_shop_all_text']): ?>
+            <?php if(isset($fields['submenu_shop_all_text'])): ?>
             <div class="row shop-all-text-menu">
                 <div class="col-lg-12 d-flex justify-content-end">
                     <a href="<?php echo $fields['submenu_shop_all_link'] ?? '#'; ?>" class="shop-all-link text-uppercase font-weight-bold mr-3"><?php echo $fields['submenu_shop_all_text']; ?></a>
