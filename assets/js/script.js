@@ -226,15 +226,6 @@
         return false;
     });
     
-
-    // check if top header announcement fixed exists
-    $(document).on('DOMNodeInserted', function(e) {
-        if ( $(e.target).hasClass('bulletinwp-placement-top') && $('.bulletinwp-placement-top').length < 2 ) {
-            $('header').before($(e.target).clone().addClass('fixed-duplicate-bulletinwp'));
-            $(e.target).css({ opacity: 0 });
-        }
-    });
-
 } )( jQuery );
 
 
