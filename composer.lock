@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "htmlburger/carbon-fields",
-            "version": "v3.6.5",
+            "version": "v3.6.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/htmlburger/carbon-fields.git",
-                "reference": "b18f8e2a2cc4cc976306eb867ad1d740a8e7c1d9"
+                "reference": "6981efa8d53d9ba9a512596a462b88a6fbf4e83c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/htmlburger/carbon-fields/zipball/b18f8e2a2cc4cc976306eb867ad1d740a8e7c1d9",
-                "reference": "b18f8e2a2cc4cc976306eb867ad1d740a8e7c1d9",
+                "url": "https://api.github.com/repos/htmlburger/carbon-fields/zipball/6981efa8d53d9ba9a512596a462b88a6fbf4e83c",
+                "reference": "6981efa8d53d9ba9a512596a462b88a6fbf4e83c",
                 "shasum": ""
             },
             "require": {
@@ -144,7 +144,7 @@
                 "issues": "https://github.com/htmlburger/carbon-fields/issues",
                 "source": "https://github.com/htmlburger/carbon-fields"
             },
-            "time": "2024-07-31T08:17:38+00:00"
+            "time": "2025-05-07T11:37:47+00:00"
         },
         {
             "name": "scssphp/scssphp",
