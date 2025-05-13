@@ -227,7 +227,9 @@ function aa_ac_shortcode( $attributes ) {
 	$attrs = shortcode_atts( array(
 		'id' => null
 	), $attributes );
-	
+
+	if( aa_is_page_editor()) { return null; }
+ 	
 	return apply_filters('the_content', get_post_field('post_content', $attrs['id']));
 }
 add_shortcode( 'sc-content', 'aa_ac_shortcode' );

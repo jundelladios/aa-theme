@@ -56,10 +56,7 @@ Block::make( __( 'Slider' ) )
 
                         <div class="slide-bg ">
 
-                            <?php aa_lazyimg([
-                                'src' => $image[0],
-                                'alt' => $alt
-                            ]); ?>
+                            <img src="<?php echo $image[0]; ?>" alt="<?php echo $alt; ?>" />
 
                             <div class="slide-container-wrap">
                                 <?php if( isset( $slide['embed_code'] ) ): echo $slide['embed_code']; endif; ?>

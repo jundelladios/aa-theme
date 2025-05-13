@@ -5,7 +5,7 @@
     }
 
     window.mediaQ = {
-        md: window.matchMedia("only screen and (max-width: 767px)").matches,
+        md: window.matchMedia("only screen and (max-width: 768px)").matches,
         lg: window.matchMedia("only screen and (max-width: 991px)").matches,
         sm: window.matchMedia("only screen and (max-width: 575px)").matches
     }
@@ -16,7 +16,7 @@
 
         function mediaQset() {
             window.mediaQ = {
-                md: window.matchMedia("only screen and (max-width: 767px)").matches,
+                md: window.matchMedia("only screen and (max-width: 768px)").matches,
                 lg: window.matchMedia("only screen and (max-width: 991px)").matches,
                 sm: window.matchMedia("only screen and (max-width: 575px)").matches
             }

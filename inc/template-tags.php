@@ -7,106 +7,6 @@
  * @package AA_Project
  */
 
-// adding custom attribute for wp images
-add_filter( 'wp_get_attachment_image_attributes', 'aa_change_attachment_image_markup' );
-function aa_change_attachment_image_markup($attributes) {
-	if( $attributes['src'] && !is_admin() ) {
-
-		$excludesLazyload = explode(',', preg_replace("/\r|\n/", "", carbon_get_theme_option('aa_admin_settings_nolazyloadlists')));
-    	$isExcludeLazyload = array_search($attributes['src'], $excludesLazyload);
-
-		$srcset = \Api\Media::imageproxy($attributes['src']);
-		$imgurl = \Api\Media::imageURLCDN($attributes['src']);
-
-		if( carbon_get_theme_option('aa_admin_settings_cdnproxy') && !is_int($isExcludeLazyload) ) {
-
-			if( !isset( $attributes['data-srcset'] ) ) {
-				$attributes['data-srcset'] = $srcset;
-			}
-
-			if( !isset( $attributes['data-sizes'] ) ) {
-				$attributes['data-sizes'] = 'auto';
-			}
-
-			$attributes['class'] .= ' lazyload lz-blur';
-
-			$attributes['src'] = "data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%200%200'%3E%3C/svg%3E";
-			
-		} else {
-
-			$imgdetails = wpdb_image_attachment_details($attributes['src']);
-			if($imgdetails) {
-				$attributes['width'] = $imgdetails['width'];
-				$attributes['height'] = $imgdetails['height'];
-				$attributes['alt'] = $imgdetails['alt'];
-			}
-
-			$attributes['loading'] = "eager";
-
-			$attributes['src'] = $imgurl;
-		}
-
-	}
-
-	return $attributes;
-}
-
-// wp images with srcset
-add_filter('the_content','aa_wp_make_response_image_srcsets');
-function aa_wp_make_response_image_srcsets($the_content) {
-	if(!$the_content) { return; }
-	libxml_use_internal_errors(true);
-	$post = new DOMDocument();
-    $post->loadHTML(
-		mb_convert_encoding(
-			$the_content, 
-			'HTML-ENTITIES', 
-			defined(DB_CHARSET) ? DB_CHARSET : 'UTF-8'
-		)
-	);
-    $imgs = $post->getElementsByTagName('img');
-	foreach( $imgs as $img ) {
-
-		$src = $img->getAttribute('src');
-		
-		$excludesLazyload = explode(',', preg_replace("/\r|\n/", "", carbon_get_theme_option('aa_admin_settings_nolazyloadlists')));
-    	$isExcludeLazyload = array_search($src, $excludesLazyload);
-
-		$srcset = \Api\Media::imageproxy($src);
-
-		$imgurl = \Api\Media::imageURLCDN($src);
-
-		if( carbon_get_theme_option('aa_admin_settings_cdnproxy') && !is_int($isExcludeLazyload) && !is_admin() ) {
-			if( !$img->hasAttribute('data-srcset') ) {
-				$img->setAttribute('data-srcset', $srcset);
-			}
-			if( !$img->hasAttribute('data-sizes') ) {
-				$img->setAttribute('data-sizes', 'auto');
-			}
-
-			$img->setAttribute('class', $img->getAttribute('class')." lazyload lz-blur");
-
-			$img->setAttribute('src', "data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%200%200'%3E%3C/svg%3E");
-
-		} else {
-
-			$imgdetails = wpdb_image_attachment_details($img->getAttribute('src'));
-			if($imgdetails) {
-				$img->setAttribute('width', $imgdetails['width']);
-				$img->setAttribute('height', $imgdetails['height']);
-				$img->setAttribute('alt', $imgdetails['alt']);
-			}
-			
-			$img->setAttribute('loading', "eager");
-
-			$img->setAttribute('src', $imgurl);
-
-		}
-
-	}
-	return $post->saveHTML();
-}
-
 
 add_filter('media_send_to_editor', 'aa_inserted_image_div', 10, 3 );
 
@@ -134,10 +34,7 @@ function aa_site_logo_v2() {
 		if ( has_custom_logo() ) {
 			?>
 
-			<?php aa_lazyimg([
-				'src' => $logo[0],
-				'alt' => get_bloginfo('name')
-			]); ?>
+			<img src="<?php echo $logo[0]; ?>" alt="<?php echo get_bloginfo('name'); ?>" />
 
 			<?php
 
@@ -358,12 +255,11 @@ function aa_global_settings_head() {
 			API_BASE: '<?php echo $apibase; ?>',
 			IMAGE_CDN: '<?php echo "$cdn"; ?>',
 			HOME_URL: '<?php echo home_url(); ?>',
-			IMG_PRELOADER: "data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%200%200'%3E%3C/svg%3E",
+			IMG_PRELOADER: "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==",
 			SRCSET: function($url) {
 				<?php if( $cdn ): ?>
 					var imagecdnproxy = $url.replace('<?php echo home_url(); ?>', '<?php echo $cdn; ?>');
 					return `
-					${imagecdnproxy}?width=400 600w,
 					${imagecdnproxy}?width=600 800w,
 					${imagecdnproxy}?width=800 1600w,
 					${imagecdnproxy}?width=1600 1900w,
@@ -373,19 +269,21 @@ function aa_global_settings_head() {
 					return $url;
 				<?php endif; ?>
 			},
-			CDNSRCMIN: function($url) {
-				<?php if( $cdn ): ?>
-				return `data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%200%200'%3E%3C/svg%3E`;
-				<?php else: ?>
-				return $url;
-				<?php endif; ?>
+			SRCSIZES: function() {
+				return `
+				(min-width: 991px) 1900px,
+				(min-width: 768px) 1600px,
+				(min-width: 576px) 800px,
+				100vw
+				`;
 			},
-			CDNSRC: function($url) {
-				<?php if( $cdn ): ?>
-				return `data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%200%200'%3E%3C/svg%3E`;
-				<?php else: ?>
-				return $url;
-				<?php endif; ?>
+			CDNSRCMIN: function($url) {
+				if( !this.IMAGE_CDN ) { return $url; }
+				var imagecdnproxy = this.img.replace(
+					this.HOME_URL,
+					this.IMAGE_CDN
+				);
+				return imagecdnproxy;
 			}
 		};
 	</script>

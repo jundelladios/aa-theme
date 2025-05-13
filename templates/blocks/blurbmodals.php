@@ -94,10 +94,7 @@ Block::make( __( 'Blurb with Modal' ) )
                     <div class="position-relative scwrap">
                         <?php if(isset($image[0])): ?>
                         <div class="mb-3 cursor-pointer" data-modal-trigger="<?php echo $firstindexer; ?>">
-                            <?php aa_lazyimg([
-                                'src' => $image[0],
-                                'alt' => $alt
-                            ]); ?>
+                            <img src="<?php echo $image[0]; ?>" alt="<?php echo $alt; ?>" />
                         </div>
                         <?php endif; ?>
                         <div class="text-center blurbcontent">

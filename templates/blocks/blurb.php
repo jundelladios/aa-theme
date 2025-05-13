@@ -59,10 +59,7 @@ Block::make( __( 'Blurb Module' ) )
                         <div class="blurb-item-content-wrap">
                             <?php if( $blurbs['image'] ): ?>
                                 <div class="img-wrap">
-                                    <?php aa_lazyimg([
-                                        'src' => $image[0],
-                                        'alt' => $alt
-                                    ]); ?>
+                                    <img src="<?php echo $image[0]; ?>" alt="<?php echo $alt; ?>" />
                                 </div>
                             <?php endif; ?>    
                             <?php if ( $blurbs['content'] ): ?>

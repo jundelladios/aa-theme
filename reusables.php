@@ -65,11 +65,11 @@ function americanAccentsReusableModalContent($moduleid, $entries=[], $options=[]
                                 ?>
                                 <div class="img-slide-item" data-module-slide-indexer="<?php echo $secondindexer; ?>">
                                     <div class="img-fit-wrap">
-                                        <?php aa_lazyimg([
-                                            'src' => $ent['_modal_image'],
-                                            'alt' => $ent['_modal_image_alt'],
-                                            'data-zoom-image' => $ent['_modal_image']
-                                        ]); ?>
+                                         <img 
+                                         src="<?php echo $ent['_modal_image']; ?>" 
+                                         alt="<?php echo $ent['_modal_image_alt']; ?>" 
+                                         data-zoom-image="<?php echo $ent['_modal_image']; ?>"
+                                         />
                                     </div>
 
                                     <div class="button-actions mt-3">
@@ -126,10 +126,10 @@ function americanAccentsReusableModalContent($moduleid, $entries=[], $options=[]
                                 <div class="aa-idea-thumbnail-slide">
                                     <div class="img-slide-item">
                                         <div class="img-fit-wrap p-2">
-                                            <?php aa_lazyimg([
-                                                'src' => $ent['_modal_image'],
-                                                'alt' => $ent['_modal_image_alt']
-                                            ]); ?>
+                                            <img 
+                                            src="<?php echo $ent['_modal_image']; ?>"
+                                            alt="<?php echo $ent['_modal_image_alt']; ?>"
+                                            />
                                         </div>
                                     </div>
                                 </div>

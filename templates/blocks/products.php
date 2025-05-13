@@ -149,23 +149,20 @@ Block::make( __( 'Product Module' ) )
                                                     $pimg = wp_get_attachment_image_src( $product['image'], '500' );
                                                     ?>
                                                     <div class="pimage" style="<?php echo $product['image_styling']; ?>">
-                                                        <?php aa_lazyimg([
-                                                            'src' => $pimg[0],
-                                                            'alt' => aa_image_alt( $product['image'] )
-                                                        ]); ?>
+                                                        <img src="<?php echo $pimg[0]; ?>" alt="<?php echo aa_image_alt( $product['image'] ); ?>" />
                                                     </div>
                                                 <?php endif; ?>
 
                                                 <?php if( $product['texture_image'] ): 
                                                     $ptextureimg = wp_get_attachment_image_src( $product['texture_image'], '500' );
                                                     ?>
-                                                    <div class="ptextureimage lazyload absolute-full bg-cover-center" <?php aa_lazyBg($ptextureimg[0]); ?>></div>
+                                                    <div class="ptextureimage absolute-full bg-cover-center" style="background-image: url(<?php echo $ptextureimg[0]; ?>)"></div>
                                                 <?php endif; ?>
 
                                                 <?php if( $product['texture_hover_image'] ): 
                                                     $texture_hover_image = wp_get_attachment_image_src( $product['texture_hover_image'], '500' );
                                                     ?>
-                                                    <div class="texture_hover_image lazyload absolute-full bg-cover-center" <?php aa_lazyBg($texture_hover_image[0]); ?>></div>
+                                                    <div class="texture_hover_image absolute-full bg-cover-center" style="background-image: url(<?php echo $texture_hover_image[0]; ?>)"></div>
                                                 <?php endif; ?>
 
                                                 <?php if( !$product['texture_hover_image'] && $product['background'] ): ?>

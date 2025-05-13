@@ -40,3 +40,5 @@ require get_template_directory() . '/inc/scss.inc.php';
 
 require get_template_directory() . '/reusables.php';
 
+
+require get_template_directory() . '/optimization.php';
