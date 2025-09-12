@@ -47,7 +47,7 @@ Block::make( __( 'Slider' ) )
         <div class="slider-wrap slider-module-js-slick">
             <?php foreach( $fields['slides'] as $slide ): ?>
                 <?php 
-                    $image = wp_get_attachment_image_src( $slide['image'], '1599' );
+                    $image = wp_get_attachment_image_src( $slide['image'], "full" );
                     $alt = get_the_title( $slide['image'] );
                     $maxwidth = isset( $slide['content_width'] ) ? (int) $slide['content_width'] : 0;
                 ?>
@@ -58,7 +58,8 @@ Block::make( __( 'Slider' ) )
 
                             <?php aa_lazyimg([
                                 'src' => $image[0],
-                                'alt' => $alt
+                                'alt' => $alt,
+                                'loading' => $slideindex == 0 ? 'eager' : "lazy",
                             ]); ?>
 
                             <div class="slide-container-wrap">
