@@ -35,6 +35,10 @@ Block::make( __( 'Accordion' ) )
 ))
 ->set_render_callback( function( $fields, $attributes, $inner_blocks ) {
     ob_start();
+    if( isset($_GET['action']) && $_GET['action'] === 'edit' ) {
+        echo "";
+        return "";
+    }
     ?>
     <div class="accordion-module <?php echo $attributes ? $attributes['className'] : ''; ?>">
         <?php foreach( $fields['accordion'] as $pacc ): ?>

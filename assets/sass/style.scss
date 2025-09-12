@@ -1571,6 +1571,9 @@ $modulefont: 10px;
       font-family: auto;
       font-size: 30px;
       color: #707070;
+      z-index: 1;
+      background: transparent;
+      border: 0;
     }
   
     .modal-header {

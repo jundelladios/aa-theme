@@ -52,6 +52,10 @@ Block::make( __( 'Blurb with Modal' ) )
 ))
 ->set_render_callback( function( $fields, $attributes, $inner_blocks ) {
     ob_start();
+    if( isset($_GET['action']) && $_GET['action'] === 'edit' ) {
+        echo "";
+        return "";
+    }
 
     $moduleid = wp_unique_id( 'blurb_module_' );
 

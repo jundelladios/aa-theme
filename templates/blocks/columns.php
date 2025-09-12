@@ -33,6 +33,11 @@ Block::make( __( 'Column Content Module' ) )
 ))
 ->set_render_callback( function( $fields, $attributes, $inner_blocks ) {
     ob_start();
+    if( isset($_GET['action']) && $_GET['action'] === 'edit' ) {
+        echo "";
+        return "";
+    }
+    
     ?>
         <div 
         class="aa-grid 

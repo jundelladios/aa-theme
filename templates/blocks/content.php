@@ -21,6 +21,10 @@ Block::make( __( 'Content' ) )
 ))
 ->set_render_callback( function( $fields, $attributes, $inner_blocks ) {
     ob_start();
+    if(is_admin()) {
+        echo "";
+        return "";
+    }
     ?>
     <div class="content-module <?php echo $attributes ? $attributes['className'] : ''; ?>">
         <?php echo $fields['acc_content']; ?>
