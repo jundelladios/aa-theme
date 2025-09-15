@@ -80,5 +80,6 @@ Block::make( __( 'Accordion' ) )
     </div>
     <?php
     $html = ob_get_clean();
-    echo apply_filters('the_content', $html);
+    echo $html;
+    // echo apply_filters('the_content', $html);
 });

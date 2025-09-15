@@ -56,11 +56,20 @@ Block::make( __( 'Slider' ) )
 
                         <div class="slide-bg ">
 
-                            <?php aa_lazyimg([
+                            <?php 
+                            $lazyimgargs = array(
                                 'src' => $image[0],
                                 'alt' => $alt,
                                 'loading' => $slideindex == 0 ? 'eager' : "lazy",
-                            ]); ?>
+                            ); 
+
+                            if( $slideindex == 0 ) {
+                                $lazyimgargs['loading'] = 'eager';
+                                $lazyimgargs['fetchpriority'] = 'high';
+                            }
+
+                            aa_lazyimg($lazyimgargs); 
+                            ?>
 
                             <div class="slide-container-wrap">
                                 <?php if( isset( $slide['embed_code'] ) ): echo $slide['embed_code']; endif; ?>
