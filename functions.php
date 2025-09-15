@@ -7,6 +7,14 @@ require get_template_directory() . '/inc/vars.php';
  * PHP Libraries
  */
 require get_template_directory() . '/vendor/autoload.php';
+
+use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
+PucFactory::buildUpdateChecker(
+    'https://github.com/jundelladios/aa-theme',
+    __FILE__,
+    'aa-theme'
+  );
+
 /**
  * custom template tags for this theme
  */
