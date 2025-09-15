@@ -178,5 +178,71 @@ function aa_end_output_buffering( $output ) {
   }
 
 
+  // Remove inline <style> tags with id containing 'filebird-block-filebird-gallery'
+  $output = preg_replace(
+    '/<style[^>]*id=["\'][^"\']*filebird-block-filebird-gallery[^"\']*["\'][^>]*>.*?<\/style>/is',
+    '',
+    $output
+  );
+
   return $output;
 }
+
+
+// Remove classic theme styles and block styles for non-logged-in users
+add_action('wp_enqueue_scripts', function() {
+  if (!is_user_logged_in()) {
+    // Remove WP Block Library CSS
+    wp_dequeue_style('wp-block-library');
+    wp_dequeue_style('wp-block-library-theme');
+    wp_dequeue_style('global-styles');
+    wp_dequeue_style('classic-theme-styles');
+    wp_dequeue_style('wc-block-style'); // WooCommerce block styles, if present
+
+    // Remove WP Block Library JS
+    wp_dequeue_script('wp-block-library');
+    wp_dequeue_script('wp-block-library-theme');
+    wp_dequeue_script('global-styles');
+    wp_dequeue_script('classic-theme-styles');
+    wp_dequeue_script('wc-block-style');
+  }
+}, 20);
+
+// Remove WP embed script for non-logged-in users
+add_action('wp_footer', function() {
+  if (!is_user_logged_in()) {
+    wp_deregister_script('wp-embed');
+  }
+}, 1);
+
+// Remove jQuery Migrate for non-logged-in users
+add_action('wp_default_scripts', function($scripts) {
+  if (!is_user_logged_in() && isset($scripts->registered['jquery'])) {
+    $scripts->registered['jquery']->deps = array_diff(
+      $scripts->registered['jquery']->deps,
+      array('jquery-migrate')
+    );
+  }
+});
+
+// Remove dashicons for non-logged-in users
+add_action('wp_enqueue_scripts', function() {
+  if (!is_user_logged_in()) {
+    wp_dequeue_style('dashicons');
+  }
+}, 100);
+
+
+// Remove WP emoji scripts and styles for non-logged-in users
+add_action('init', function() {
+  if (!is_user_logged_in()) {
+    remove_action('wp_head', 'print_emoji_detection_script', 7);
+    remove_action('admin_print_scripts', 'print_emoji_detection_script');
+    remove_action('wp_print_styles', 'print_emoji_styles');
+    remove_action('admin_print_styles', 'print_emoji_styles');
+    remove_filter('the_content_feed', 'wp_staticize_emoji');
+    remove_filter('comment_text_rss', 'wp_staticize_emoji');
+    remove_filter('wp_mail', 'wp_staticize_emoji_for_email');
+  }
+});
+
