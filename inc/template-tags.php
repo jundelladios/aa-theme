@@ -12,8 +12,7 @@ add_filter( 'wp_get_attachment_image_attributes', 'aa_change_attachment_image_ma
 function aa_change_attachment_image_markup($attributes) {
 	if( $attributes['src'] && !is_admin() ) {
 
-		$excludesLazyload = explode(',', preg_replace("/\r|\n/", "", carbon_get_theme_option('aa_admin_settings_nolazyloadlists')));
-    $isExcludeLazyload = array_search($attributes['src'], $excludesLazyload);
+		$isExcludeLazyload = \Api\Media::isExcludeLazyload($attributes['src']);
 
 		$srcset = \Api\Media::imageproxy($attributes['src']);
 		$imgurl = \Api\Media::imageURLCDN($attributes['src']);
@@ -32,11 +31,11 @@ function aa_change_attachment_image_markup($attributes) {
 
 		$attributes['src'] = $imgurl;
 
-		if(!$attributes['loading']) {
+		if(!$attributes['loading'] && !$isExcludeLazyload) {
 			$attributes['loading'] = "lazy";
 		}
 
-		if( is_int($isExcludeLazyload) ) {
+		if( $isExcludeLazyload ) {
 			$attributes['loading'] = "eager";
 			$attributes['decoding'] = "async";
 		}
@@ -50,52 +49,77 @@ function aa_change_attachment_image_markup($attributes) {
 add_filter('the_content','aa_wp_make_response_image_srcsets');
 function aa_wp_make_response_image_srcsets($the_content) {
 	if(!$the_content) { return; }
-	libxml_use_internal_errors(true);
-	$post = new DOMDocument();
-    $post->loadHTML(
-		mb_convert_encoding(
-			$the_content, 
-			'HTML-ENTITIES', 
-			defined(DB_CHARSET) ? DB_CHARSET : 'UTF-8'
-		)
-	);
-    $imgs = $post->getElementsByTagName('img');
-	foreach( $imgs as $img ) {
+	// Use preg_replace_callback to process <img> tags in $the_content
+	$the_content = preg_replace_callback(
+		'/<img\s+[^>]*src=["\']([^"\']+)["\'][^>]*>/i',
+		function($matches) {
+			$img_tag = $matches[0];
+			$src = $matches[1];
 
-		$src = $img->getAttribute('src');
-		
-		$excludesLazyload = explode(',', preg_replace("/\r|\n/", "", carbon_get_theme_option('aa_admin_settings_nolazyloadlists')));
-    	$isExcludeLazyload = array_search($src, $excludesLazyload);
+			$isExcludeLazyload = \Api\Media::isExcludeLazyload($src);
+			$srcset = \Api\Media::imageproxy($src);
+			$imgurl = \Api\Media::imageURLCDN($src);
 
-		$srcset = \Api\Media::imageproxy($src);
+			// Replace src attribute with CDN url
+			$img_tag = preg_replace('/src=["\'][^"\']*["\']/', 'src="' . esc_attr($imgurl) . '"', $img_tag);
 
-		$imgurl = \Api\Media::imageURLCDN($src);
-
-		if( carbon_get_theme_option('aa_admin_settings_cdnproxy') && !is_int($isExcludeLazyload) && !is_admin() ) {
-			$img->setAttribute('srcset', $srcset);
-		} else {
-
-			$imgdetails = wpdb_image_attachment_details($img->getAttribute('src'));
-			if($imgdetails) {
-				$img->setAttribute('width', $imgdetails['width']);
-				$img->setAttribute('height', $imgdetails['height']);
-				$img->setAttribute('alt', $imgdetails['alt']);
+			if (carbon_get_theme_option('aa_admin_settings_cdnproxy')) {
+				// Add or replace srcset attribute
+				if (preg_match('/srcset=["\'][^"\']*["\']/', $img_tag)) {
+					$img_tag = preg_replace('/srcset=["\'][^"\']*["\']/', 'srcset="' . esc_attr($srcset) . '"', $img_tag);
+				} else {
+					$img_tag = preg_replace('/<img\s+/i', '<img srcset="' . esc_attr($srcset) . '" ', $img_tag, 1);
+				}
+			} else {
+				$imgdetails = wpdb_image_attachment_details($src);
+				if ($imgdetails) {
+					// width
+					if (preg_match('/width=["\'][^"\']*["\']/', $img_tag)) {
+						$img_tag = preg_replace('/width=["\'][^"\']*["\']/', 'width="' . esc_attr($imgdetails['width']) . '"', $img_tag);
+					} else {
+						$img_tag = preg_replace('/<img\s+/i', '<img width="' . esc_attr($imgdetails['width']) . '" ', $img_tag, 1);
+					}
+					// height
+					if (preg_match('/height=["\'][^"\']*["\']/', $img_tag)) {
+						$img_tag = preg_replace('/height=["\'][^"\']*["\']/', 'height="' . esc_attr($imgdetails['height']) . '"', $img_tag);
+					} else {
+						$img_tag = preg_replace('/<img\s+/i', '<img height="' . esc_attr($imgdetails['height']) . '" ', $img_tag, 1);
+					}
+					// alt
+					if (preg_match('/alt=["\'][^"\']*["\']/', $img_tag)) {
+						$img_tag = preg_replace('/alt=["\'][^"\']*["\']/', 'alt="' . esc_attr($imgdetails['alt']) . '"', $img_tag);
+					} else {
+						$img_tag = preg_replace('/<img\s+/i', '<img alt="' . esc_attr($imgdetails['alt']) . '" ', $img_tag, 1);
+					}
+				}
 			}
-		}
 
-		$img->setAttribute('src', $imgurl);
-		
-		if(!$img->hasAttribute('loading')) {
-			$img->setAttribute('loading', "lazy");
-		}
+			// loading attribute
+			if (!preg_match('/loading=["\'][^"\']*["\']/', $img_tag) && !$isExcludeLazyload) {
+				$img_tag = preg_replace('/<img\s+/i', '<img loading="lazy" ', $img_tag, 1);
+			}
 
-		if( is_int($isExcludeLazyload) ) {
-			$img->setAttribute('loading', "eager");
-			$img->setAttribute('decoding', "async");
-		}
+			// eager/async if excluded from lazyload
+			if ($isExcludeLazyload) {
+				// loading="eager"
+				if (preg_match('/loading=["\'][^"\']*["\']/', $img_tag)) {
+					$img_tag = preg_replace('/loading=["\'][^"\']*["\']/', 'loading="eager"', $img_tag);
+				} else {
+					$img_tag = preg_replace('/<img\s+/i', '<img loading="eager" ', $img_tag, 1);
+				}
+				// decoding="async"
+				if (preg_match('/decoding=["\'][^"\']*["\']/', $img_tag)) {
+					$img_tag = preg_replace('/decoding=["\'][^"\']*["\']/', 'decoding="async"', $img_tag);
+				} else {
+					$img_tag = preg_replace('/<img\s+/i', '<img decoding="async" ', $img_tag, 1);
+				}
+			}
 
-	}
-	return $post->saveHTML();
+			return $img_tag;
+		},
+		$the_content
+	);
+	return $the_content;
 }
 
 
